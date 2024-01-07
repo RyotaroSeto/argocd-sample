@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: hello
+  template:
+    metadata:
+      labels:
+        application: hello
+    spec:
+      serviceAccount: hello-sa
+      containers:
+        - name: hello
+          image: ghcr.io/ryotaroseto/ci-app:c363fab
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "64Mi"
+            requests:
+              cpu: "250m"
+              memory: "32Mi"
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            runAsUser: 65535
+            runAsGroup: 65535
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
