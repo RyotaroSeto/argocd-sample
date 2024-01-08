@@ -10,4 +10,4 @@ patches:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: ghcr.io/ryotaroseto/ci-app:c363fab
+        value: ghcr.io/ryotaroseto/ci-app:baecc87
