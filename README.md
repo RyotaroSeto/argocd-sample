@@ -18,6 +18,12 @@ $ helm show values --version 5.27.1 argo/argo-cd > argo-cd-values.yaml
 $ helmfile apply -e prod -f helmfile-argo-cd.yaml
 ```
 
+## Argo CD 確認
+
+```bash
+$ kubectl get pods -n argocd
+```
+
 ## ファイルの説明
 
 ### `helmfile-argo-cd.yaml`
@@ -65,3 +71,25 @@ $ argocd logout localhost:8443
 ```bash
 $ kubectl delete secret -n argocd argocd-initial-admin-secret
 ```
+
+## Argo CD とアプリケーションの連携
+
+```bash
+$ kubectl apply -f application.yaml
+```
+
+## GitHub と連携してログインする方法
+
+- GitHub OAuth Apps のトークン作成
+
+```bash
+$ echo -n 'kubernetes-secret-password' | base64
+```
+
+kubectl edit configmap argocd-cm -n argocd
+kubectl edit -n argocd secret argocd-secret
+kubectl apply -f github-https-repo-secret.yaml
+
+# deployment.yamlでserviceAccountを作成してアプリ連携
+# GitHub OAuth Appsでのログイン
+# Helmの使用
