@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-application
+  namespace: argocd
+spec:
+  project: default # 管理対象のProjectを定義（defaultは標準で作成される）
+  source:
+    repoURL: https://github.com/RyotaroSeto/argocd-sample
+    targetRevision: HEAD # 同期対象のリポジトリにおけるGitリビジョン
+    path: overlays/prod # 同期対象のディレクトリ
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy: # GitリポジトリとKubernetesクラスタ上との状態の同期ポリシー
+    automated: # 自動的に同期する場合に設定
+      prune: true # Gitリポジトリで定義されていないリソースを削除
+      selfHeal: true # trueの場合、同一のcommit SHAとパラメータの組み合わせで同期されていたら2回目以降も同期
+    syncOptions: # 同期処理の設定
+      - Validate=true # kubectl apply --validate と同様
+      - CreateNamespace=true # trueの場合、namespaceがなければ作成
+      - PruneLast=true # trueの場合、prune=trueにおける処理を同期処理の最後に実行
+      - Replace=false # trueの場合、'kubectl replace' または 'kubectl create'にてデプロイ
+      - ApplyOutOfSyncOnly=true # Out-of-Sync状態のリソースのみapplyを実行
+      - PrunePropagationPlocy=foreground # Kubernetesのガーベッジコレクションの設定
