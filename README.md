@@ -90,6 +90,11 @@ kubectl edit configmap argocd-cm -n argocd
 kubectl edit -n argocd secret argocd-secret
 kubectl apply -f github-https-repo-secret.yaml
 
-# deployment.yamlでserviceAccountを作成してアプリ連携
-# GitHub OAuth Appsでのログイン
-# Helmの使用
+# deployment.yaml で serviceAccount を作成してアプリ連携
+
+# GitHub OAuth Apps でのログイン
+
+https://github.com/argoproj/argo-cd/blob/master/docs/getting_started.md
+https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/
+
+# Helm の使用
