@@ -13,7 +13,7 @@ spec:
       labels:
         application: hello
     spec:
-      serviceAccount: hello-sa
+      # serviceAccount: hello-sa
       containers:
         - name: hello
           image: ghcr.io/ryotaroseto/ci-app:c363fab
