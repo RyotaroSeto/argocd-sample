@@ -98,3 +98,40 @@ https://github.com/argoproj/argo-cd/blob/master/docs/getting_started.md
 https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/
 
 # Helm の使用
+
+## Argo Rollouts のセットアップ
+
+Argo Rollouts をデプロイする
+
+```bash
+$ helm repo add argo https://argoproj.github.io/argo-helm
+$ helm repo update
+$ helm show values --version 2.22.3 argo/argo-rollouts > ./environment/dev/argo-rollouts-values.yaml
+$ helm show values --version 2.22.3 argo/argo-rollouts > ./environment/prod/argo-rollouts-values.yaml
+$ helmfile apply -e prod -f helmfile-argo-rollouts.yaml
+$ kubectl get pods -n argo-rollouts
+```
+
+Argo Rollouts の Web UI をインターネット経由でアクセスしたいといった場合は外部ドメインや SSL サーバー証明書等の設定を適宜行う
+
+### Argo CD への Argo Rollouts の拡張機能
+
+ArgoCDExtension というカスタムリソースを利用することで、ロールアウトの実行状況を ArgoCD 画面で確認できる
+
+helmfile-argo-cd.yaml
+
+```yaml
+extensions:
+  # -- Enable support for Argo UI extensions
+  enabled: true
+```
+
+```bash
+$ kubectl apply -f rollout-extention.yaml
+```
+
+Prometheus インストール ※version は istio に合わせる
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.20/samples/addons/prometheus.yaml
+```
